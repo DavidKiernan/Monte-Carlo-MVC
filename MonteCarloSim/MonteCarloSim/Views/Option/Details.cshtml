@@ -1,0 +1,77 @@
+﻿@model MonteCarloSim.Models.Option
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Option</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ContractName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContractName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpriryDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpriryDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CurrentPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CurrentPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StrikePrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StrikePrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ImpliedVolatility)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ImpliedVolatility)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RiskFreeRate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RiskFreeRate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OptionType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OptionType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Prices)
+        </dt>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

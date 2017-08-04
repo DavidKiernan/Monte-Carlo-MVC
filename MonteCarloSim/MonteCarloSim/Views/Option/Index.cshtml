@@ -1,0 +1,70 @@
+﻿@model IEnumerable<MonteCarloSim.Models.Option>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ContractName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExpriryDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StrikePrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImpliedVolatility)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RiskFreeRate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OptionType)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContractName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExpriryDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CurrentPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StrikePrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImpliedVolatility)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.RiskFreeRate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OptionType)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
