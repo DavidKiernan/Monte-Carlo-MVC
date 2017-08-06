@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -12,13 +13,16 @@ namespace MonteCarloSim.Models
     {
         public int ID { get; set; } // Primary Key
         public string ContractName { get; set; }
+
+        // Display the date in this format
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ExpriryDate { get; set; } // date the contract expires on
         public double CurrentPrice { get; set; } // current price of the company's stock
         public double StrikePrice { get; set; } // price sell \ buy option
         public double ImpliedVolatility { get; set; }
         public double RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate)
         public OptionType OptionType { get; set; }
-
-        public List<double>  Prices { get; set; }
+        public List<double>  Prices { get; set; } // List for the prices 
     }
 }

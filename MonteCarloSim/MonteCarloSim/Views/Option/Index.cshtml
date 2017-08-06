@@ -12,59 +12,60 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ContractName)
+            @Html.DisplayName("Contract Name")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ExpriryDate)
+            @Html.DisplayName("Expriry Date")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CurrentPrice)
+            @Html.DisplayName("Current Price")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.StrikePrice)
+            @Html.DisplayName("Strike Price")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ImpliedVolatility)
+            @Html.DisplayName("Implied Volatility")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RiskFreeRate)
+            @Html.DisplayName("Risk Free Rate")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.OptionType)
+            @Html.DisplayName("Option Type")
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ContractName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ExpriryDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CurrentPrice)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StrikePrice)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ImpliedVolatility)
-        </td>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContractName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpriryDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrikePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImpliedVolatility)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.RiskFreeRate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OptionType)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
+            <td>
+                @Html.DisplayFor(modelItem => item.RiskFreeRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OptionType)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    }
 
 </table>
