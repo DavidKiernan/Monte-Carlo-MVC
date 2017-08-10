@@ -65,10 +65,26 @@
         <dd>
             @Html.DisplayFor(model => model.OptionType)
         </dd>
+        <!-- Adding view the Price-->
         <dt>
-            @Html.DisplayNameFor(model => model.Prices)
+            @Html.DisplayNameFor(model => model.OptPrices)
         </dt>
-
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>Price</th>
+                </tr>
+                @foreach (var item in Model.OptPrices)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+        <!--- END -->
     </dl>
 </div>
 <p>

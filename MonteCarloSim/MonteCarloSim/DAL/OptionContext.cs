@@ -6,14 +6,15 @@ namespace MonteCarloSim.DAL
 {
     public class OptionContext : DbContext
     {
-        public OptionContext() : base("OptionContext") // connection string add to web.config
+        public OptionContext() : base("OptionContext") // pass to web config
         { }
 
         public DbSet<Option> Options { get; set; }
+        public DbSet<OptionPrice> OptionPrices { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>(); // names table Option & Not Options
         }
     }
 }

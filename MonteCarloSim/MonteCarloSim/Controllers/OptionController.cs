@@ -13,11 +13,14 @@ namespace MonteCarloSim.Controllers
 {
     public class OptionController : Controller
     {
+        // instantiates a DB context Object
         private OptionContext db = new OptionContext();
 
         // GET: Option
         public ActionResult Index()
         {
+            // gets list of options from the Options entity
+            // by reading the Options property of DB context
             return View(db.Options.ToList());
         }
 
