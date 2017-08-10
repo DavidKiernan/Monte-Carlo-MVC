@@ -50,15 +50,23 @@ namespace MonteCarloSim.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,ContractName,ExpriryDate,CurrentPrice,StrikePrice,ImpliedVolatility,RiskFreeRate,OptionType")] Option option)
+        public ActionResult Create([Bind(Include = "ContractName,ExpriryDate,CurrentPrice,StrikePrice,ImpliedVolatility,RiskFreeRate,OptionType")] Option option)
         {
-            if (ModelState.IsValid)
+            // ID removed from bind as its PK and auto done by DB
+            try
             {
-                db.Options.Add(option);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid) // server side validation
+                {
+                    db.Options.Add(option);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
+            catch (DataException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
             return View(option);
         }
 
@@ -80,26 +88,43 @@ namespace MonteCarloSim.Controllers
         // POST: Option/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,ContractName,ExpriryDate,CurrentPrice,StrikePrice,ImpliedVolatility,RiskFreeRate,OptionType")] Option option)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(option).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(option);
-        }
-
-        // GET: Option/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult EditPost(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var optionToUpdate = db.Options.Find(id);
+            if (TryUpdateModel(optionToUpdate, "", new string[] { "ContractName", "ExpriryDate", "CurrentPrice", "StrikePrice", "ImpliedVolatility", "RiskFreeRate", "OptionType" }))
+            {
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (DataException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+            return View(optionToUpdate);
+        }
+
+        // GET: Option/Delete/5
+        public ActionResult Delete(int? id, bool? saveChangesError = false)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+            }
+
             Option option = db.Options.Find(id);
             if (option == null)
             {
@@ -109,13 +134,21 @@ namespace MonteCarloSim.Controllers
         }
 
         // POST: Option/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
-            Option option = db.Options.Find(id);
-            db.Options.Remove(option);
-            db.SaveChanges();
+            try
+            {
+                Option option = db.Options.Find(id);
+                db.Options.Remove(option);
+                db.SaveChanges();
+            }
+            catch (DataException/* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
             return RedirectToAction("Index");
         }
 
