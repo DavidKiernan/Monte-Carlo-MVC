@@ -58,22 +58,27 @@ namespace MonteCarloSim.Controllers
                 if (ModelState.IsValid) // server side validation
                 {
                     option.OptPrices = new List<OptionPrice>();
-                    OptionPrice optionPrices = new OptionPrice();
+                    //OptionPrice optionPrices = new OptionPrice();
+
 
                     //  Call
                     if (option.OptionType == OptionType.Call)
                     {
+
                         // loop through difference in days
                         for (double day = 1; day < ((option.ExpriryDate - DateTime.Now).Days + 1); day++)
                         {
-                            /* This is working correctly but it it over riding the pervious date & Price
-                             * Eg. debugging will show value of 1.0, 0.99, 1.1 but will override that only 1.1 is the value added
-                             */
+
+                            OptionPrice optionPrices = new OptionPrice(); // each loop will create a new OptionPrice class
+
                             optionPrices.Price = option.callOption(option.CurrentPrice, option.StrikePrice, option.RiskFreeRate, option.ImpliedVolatility, day);
                             optionPrices.Day = DateTime.Now.AddDays(day);
-                            option.OptPrices.Add(optionPrices);
 
+                            option.OptPrices.Add(optionPrices); // Adds to the 
                         }
+                        // Check that can have outside the else to allow called once may need to be left as is more or less
+                        // for getting a variation
+                        // Add the option to the DB return to option page
                         db.Options.Add(option);
                         db.SaveChanges();
                         return RedirectToAction("Index");
