@@ -72,11 +72,16 @@
         <dd>
             <table class="table">
                 <tr>
+                    <th>Day</th>
                     <th>Price</th>
                 </tr>
                 @foreach (var item in Model.OptPrices)
                 {
                     <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Day)
+
+                        </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Price)
                         </td>
@@ -91,3 +96,4 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -11,6 +12,9 @@ namespace MonteCarloSim.Models
         public int OptionID { get; set; } // FK 
 
         public double Price { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}")]
+        public DateTime Day { get; set; }
 
         public virtual Option Option { get; set; }
     }
