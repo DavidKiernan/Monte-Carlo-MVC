@@ -50,39 +50,64 @@ namespace MonteCarloSim.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ContractName,ExpriryDate,CurrentPrice,StrikePrice,ImpliedVolatility,RiskFreeRate,OptionType")] Option option)
+        public ActionResult Create([Bind(Include = "ContractName,ExpiryDate,CurrentPrice,StrikePrice,ImpliedVolatility,RiskFreeRate,OptionType")] Option option)
         {
             // ID removed from bind as its PK and auto done by DB
             try
             {
+
                 if (ModelState.IsValid) // server side validation
                 {
+
                     option.OptPrices = new List<OptionPrice>();
-                    //OptionPrice optionPrices = new OptionPrice();
 
 
                     //  Call
                     if (option.OptionType == OptionType.Call)
                     {
 
-                        // loop through difference in days
-                        for (double day = 1; day < ((option.ExpriryDate - DateTime.Now).Days + 1); day++)
+                        // loop through difference in days, day is double as it will be divided in method 
+                        for (double day = 1; day < ((option.ExpiryDate - DateTime.Now).Days + 1); day++)
                         {
 
                             OptionPrice optionPrices = new OptionPrice(); // each loop will create a new OptionPrice class
 
-                            optionPrices.Price = option.callOption(option.CurrentPrice, option.StrikePrice, option.RiskFreeRate, option.ImpliedVolatility, day);
-                            optionPrices.Day = DateTime.Now.AddDays(day);
+                            optionPrices.Price = option.CallOption(option.CurrentPrice, option.StrikePrice, option.RiskFreeRate, option.ImpliedVolatility, day);
+                            optionPrices.Day = DateTime.Now.AddDays(day); // try with expriy date subtracting can be done but makes no differance
+                            option.OptPrices.Add(optionPrices); // Adds to the option.OptPrice 
 
-                            option.OptPrices.Add(optionPrices); // Adds to the 
                         }
-                        // Check that can have outside the else to allow called once may need to be left as is more or less
-                        // for getting a variation
-                        // Add the option to the DB return to option page
-                        db.Options.Add(option);
-                        db.SaveChanges();
-                        return RedirectToAction("Index");
+
+                        db.Options.Add(option); // Add to db 
+
                     }
+                    // Put option type
+                    else if (option.OptionType == OptionType.Put)
+                    {
+
+                        // loop through difference in days, day is double as it will be divided in method 
+                        for (double day = 1; day < ((option.ExpiryDate - DateTime.Now).Days + 1); day++)
+                        {
+
+                            OptionPrice optionPrices = new OptionPrice(); // each loop will create a new OptionPrice class
+
+                            optionPrices.Price = option.PutOption(option.CurrentPrice, option.StrikePrice, option.RiskFreeRate, option.ImpliedVolatility, day);
+                            optionPrices.Day = DateTime.Now.AddDays(day); // try with expriy date subtracting can be done but makes no differance
+                            option.OptPrices.Add(optionPrices); // Adds to the option.OptPrice 
+
+                        }
+
+                        db.Options.Add(option); // Add to db 
+
+                    }
+
+                    // outside if call
+                    // Check that can have outside the else to allow called once may need to be left as is more or less
+                    // for getting a variation
+                    // Add the option to the DB return to option page
+
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
                 }
             }
             catch (DataException /* dex */)
@@ -120,7 +145,7 @@ namespace MonteCarloSim.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var optionToUpdate = db.Options.Find(id);
-            if (TryUpdateModel(optionToUpdate, "", new string[] { "ContractName", "ExpriryDate", "CurrentPrice", "StrikePrice", "ImpliedVolatility", "RiskFreeRate", "OptionType" }))
+            if (TryUpdateModel(optionToUpdate, "", new string[] { "ContractName", "ExpiryDate", "CurrentPrice", "StrikePrice", "ImpliedVolatility", "RiskFreeRate", "OptionType" }))
             {
                 try
                 {

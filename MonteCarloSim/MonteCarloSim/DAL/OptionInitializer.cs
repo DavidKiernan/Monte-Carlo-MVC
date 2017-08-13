@@ -14,8 +14,8 @@ namespace MonteCarloSim.DAL
         {
             var options = new List<Option>
             {
-                new Option{ContractName = "IBM112", CurrentPrice = 145.13, ExpriryDate = DateTime.Parse("2017-Aug-04"), StrikePrice = 135.00 , ImpliedVolatility = 0.00, RiskFreeRate = 1.00 , OptionType = OptionType.Call},
-                new Option{ContractName = "IBM170811P00165000", CurrentPrice = 145.30, ExpriryDate = DateTime.Parse("2017-Aug-11"), StrikePrice = 165.00 , ImpliedVolatility = 92.58, RiskFreeRate = 1.00 , OptionType = OptionType.Put}
+                new Option{ContractName = "IBM112", CurrentPrice = 145.13, ExpiryDate = DateTime.Parse("2017-Aug-04"), StrikePrice = 135.00 , ImpliedVolatility = 0.00, RiskFreeRate = 1.00 , OptionType = OptionType.Call},
+                new Option{ContractName = "IBM170811P00165000", CurrentPrice = 145.30, ExpiryDate = DateTime.Parse("2017-Aug-11"), StrikePrice = 165.00 , ImpliedVolatility = 92.58, RiskFreeRate = 1.00 , OptionType = OptionType.Put}
             };
 
             options.ForEach(o => context.Options.Add(o));

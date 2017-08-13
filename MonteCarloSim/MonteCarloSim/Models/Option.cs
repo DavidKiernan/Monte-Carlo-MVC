@@ -16,7 +16,7 @@ namespace MonteCarloSim.Models
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime ExpriryDate { get; set; } // date the contract expires on
+        public DateTime ExpiryDate { get; set; } // date the contract expires on
         public double CurrentPrice { get; set; } // current price of the company's stock
         public double StrikePrice { get; set; } // price sell \ buy option
         public double ImpliedVolatility { get; set; }
@@ -40,7 +40,7 @@ namespace MonteCarloSim.Models
         * Author Michael Halls-Moore on February 2nd, 2013
         * Accessed on 15th July 2017
         */
-        private double gaussian_box_muller()
+        private double Gaussian_Box_Muller()
         {
             double x = 0.0, y = 0.0;
             double euclid_sq = 0.0;
@@ -63,26 +63,26 @@ namespace MonteCarloSim.Models
 
         // private methods as these will be used inside the public method & user has no need to access them
         // Asset Price
-        private double generateAssetPrice(double currentPrice, double volatility, double riskFree, double time)
+        private double GenerateAssetPrice(double currentPrice, double volatility, double riskFree, double time)
         {
-            return currentPrice * Math.Exp((riskFree - 0.5 * volatility * volatility) * time + volatility * Math.Sqrt(time) * gaussian_box_muller());
+            return currentPrice * Math.Exp((riskFree - 0.5 * volatility * volatility) * time + volatility * Math.Sqrt(time) * Gaussian_Box_Muller());
         }
 
         // call payoff
-        private double callPayoff(double assetPrice, double strikePrice)
+        private double CallPayoff(double assetPrice, double strikePrice)
         {
             return Math.Max(assetPrice - strikePrice, 0.0);
         }
 
         // Put payoff
-        private double putPayoff(double assetPrice, double strikePrice)
+        private double PutPayoff(double assetPrice, double strikePrice)
         {
             return Math.Max(0.0, strikePrice - assetPrice);
         }
 
         // public methods used by the program
         // MC_call_option
-        public double callOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
+        public double CallOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
         {
             int simulations = 1000000;
             double payoff = 0.0;
@@ -92,15 +92,15 @@ namespace MonteCarloSim.Models
 
             for (int i = 0; i < simulations; i++)
             {
-                double assetPrice = generateAssetPrice(currentPrice, vol, riskFree, time);
-                payoff += callPayoff(assetPrice, strikePrice);
+                double assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
+                payoff += CallPayoff(assetPrice, strikePrice);
             }
 
             return Math.Round((payoff / simulations) * Math.Exp(-riskFree * time), 2); // Retrun output to 2 dp
         }
 
         // MC_put_option
-        public double putOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
+        public double PutOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
         {
             int simulations = 1000000;
             double payoff = 0.0;
@@ -109,8 +109,8 @@ namespace MonteCarloSim.Models
             riskFree = riskFree / 100;
             for (int i = 0; i < simulations; i++)
             {
-                double assetPrice = generateAssetPrice(currentPrice, vol, riskFree, time);
-                payoff += putPayoff(assetPrice, strikePrice);
+                double assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
+                payoff += PutPayoff(assetPrice, strikePrice);
             }
 
             return Math.Round((payoff / simulations) * Math.Exp(-riskFree * time), 2);
