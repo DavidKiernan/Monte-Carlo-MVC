@@ -81,15 +81,20 @@ namespace MonteCarloSim.Models
             return Math.Max(0.0, strikePrice - assetPrice);
         }
 
-        // public methods used by the program
+        
         // MC_call_option
         private double CallOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
         {
-            int simulations = 1000000;
-            double payoff = 0.0;
-            double time = day / 365.0;
             vol = vol / 100;
             riskFree = riskFree / 100;
+            int simulations = 1000000;
+            double payoff = 0.0;
+            double time;
+            if (DateTime.IsLeapYear(DateTime.Now.Year)) // check if year is a leap year 
+            {
+                time = day / 366.0; // divide by days in leap year
+            }
+            else { time = day / 365.0; } // divide by days in non leap year
 
             for (int i = 0; i < simulations; i++)
             {
@@ -103,11 +108,18 @@ namespace MonteCarloSim.Models
         // MC_put_option
         private double PutOption(double currentPrice, double strikePrice, double riskFree, double vol, int day)
         {
-            int simulations = 1000000;
-            double payoff = 0.0;
-            double time = day / 365.0; // divide by year Make leap Year? 
             vol = vol / 100;
             riskFree = riskFree / 100;
+            int simulations = 1000000;
+            double payoff = 0.0;
+            double time;
+            if (DateTime.IsLeapYear(DateTime.Now.Year)) // check if year is a leap year 
+            {
+                time = day / 366.0; // divide by days in leap year
+            }
+            else { time = day / 365.0; } // divide by days in non leap year
+            
+            
             for (int i = 0; i < simulations; i++)
             {
                 double assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
@@ -117,16 +129,18 @@ namespace MonteCarloSim.Models
             return Math.Round((payoff / simulations) * Math.Exp(-riskFree * time), 2);
         }
 
+        // public methods
+        // The Create Controller will call these methods
         public void CreateCall(double currentPrice, double strikePrice, double riskFree, double vol, DateTime ExpiryDate)
         {
-            double currPrice = currentPrice, spotPrice = strikePrice, riskFR = riskFree, iv = vol;
+            double currPrice = currentPrice, spotPrice = strikePrice, riskFR = riskFree, iv = vol; // this allows to vary the inputs & Create with the original
             int differance = (ExpiryDate - DateTime.Now).Days;
             OptPrices = new List<OptionPrice>();
 
             for (int count = 0; count < 3; count++)
             {
                 // loop through the days
-                for (int day = 1; day < differance +1; day++)
+                for (int day = 1; day < differance + 1; day++)
                 {
                     OptionPrice optionPrices = new OptionPrice(); // each loop will create a new instance of OptionPrice class
                     optionPrices.Price = optionPrices.Price = CallOption(currPrice, spotPrice, riskFR, iv, day);
@@ -140,8 +154,8 @@ namespace MonteCarloSim.Models
                     {
                         optionPrices.Varation = "Curr: " + currPrice + " SP: " + spotPrice + " RFR: " + riskFR + " IV: " + iv;
                     }
-                    OptPrices.Add(optionPrices);
-                }
+                    OptPrices.Add(optionPrices); // add to the list
+                } // end the inner loop
                 if (count % 2 == 0)
                 {
                     currPrice += 1;
@@ -160,8 +174,54 @@ namespace MonteCarloSim.Models
                         iv = 0;
                     }
                 }
-            }
-        }
+            } // end outer loop varation
+        } // end 
 
+        // Put Create
+        public void CreatePut(double currentPrice, double strikePrice, double riskFree, double vol, DateTime ExpiryDate)
+        {
+            double currPrice = currentPrice, spotPrice = strikePrice, riskFR = riskFree, iv = vol; // this allows to vary the inputs & Create with the original
+            int differance = (ExpiryDate - DateTime.Now).Days;
+            OptPrices = new List<OptionPrice>();
+
+            for (int count = 0; count < 3; count++)
+            {
+                // loop through the days
+                for (int day = 1; day < differance + 1; day++)
+                {
+                    OptionPrice optionPrices = new OptionPrice(); // each loop will create a new instance of OptionPrice class
+                    optionPrices.Price = optionPrices.Price = PutOption(currPrice, spotPrice, riskFR, iv, day);
+                    optionPrices.Day = DateTime.Now.AddDays(day);
+
+                    if (count == 0)
+                    {
+                        optionPrices.Varation = "Original";
+                    }
+                    else
+                    {
+                        optionPrices.Varation = "Curr: " + currPrice + " SP: " + spotPrice + " RFR: " + riskFR + " IV: " + iv;
+                    }
+                    OptPrices.Add(optionPrices); // add to the list
+                } // end the inner loop
+                if (count % 2 == 0)
+                {
+                    currPrice += 1;
+                    spotPrice -= 0.5;
+                    iv += 5;
+                    riskFR -= 0.01;
+                }
+                else
+                {
+                    currPrice -= 1;
+                    spotPrice += 0.5;
+                    riskFR += 0.02;
+                    iv -= 5;
+                    if (iv < 0) // IV can never be negative
+                    {
+                        iv = 0;
+                    }
+                }
+            } // end outer loop varation
+        } // end 
     }
 }

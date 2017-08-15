@@ -55,20 +55,25 @@ namespace MonteCarloSim.Controllers
             // ID removed from bind as its PK and auto done by DB
             try
             {
-                
+                if (option.ExpiryDate <= DateTime.Now) // Date selected has to be greater than Todays Date
+                {
+                    ModelState.AddModelError("ExpiryDate", "Date Must Be Greater Than Today's Date"); // display this meeage  
+                }
+
                 if (ModelState.IsValid) // server side validation
                 {
-                    int diff = (option.ExpiryDate - DateTime.Now).Days;
-                    option.OptPrices = new List<OptionPrice>();
-
 
                     //  Call
                     if (option.OptionType == OptionType.Call)
                     {
                         option.CreateCall(option.CurrentPrice, option.StrikePrice, option.RiskFreeRate, option.ImpliedVolatility, option.ExpiryDate);
-                        db.Options.Add(option);
+                    }
+                    else // Put
+                    {
+                        option.CreatePut(option.CurrentPrice, option.StrikePrice, option.RiskFreeRate, option.ImpliedVolatility, option.ExpiryDate);
                     }
 
+                    db.Options.Add(option);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
