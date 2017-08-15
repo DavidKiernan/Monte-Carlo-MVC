@@ -68,6 +68,7 @@ namespace MonteCarloSim.Models
             return currentPrice * Math.Exp((riskFree - 0.5 * volatility * volatility) * time + volatility * Math.Sqrt(time) * Gaussian_Box_Muller());
         }
 
+
         // call payoff
         private double CallPayoff(double assetPrice, double strikePrice)
         {
@@ -82,7 +83,7 @@ namespace MonteCarloSim.Models
 
         // public methods used by the program
         // MC_call_option
-        public double CallOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
+        private double CallOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
         {
             int simulations = 1000000;
             double payoff = 0.0;
@@ -100,7 +101,7 @@ namespace MonteCarloSim.Models
         }
 
         // MC_put_option
-        public double PutOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
+        private double PutOption(double currentPrice, double strikePrice, double riskFree, double vol, int day)
         {
             int simulations = 1000000;
             double payoff = 0.0;
@@ -115,5 +116,52 @@ namespace MonteCarloSim.Models
 
             return Math.Round((payoff / simulations) * Math.Exp(-riskFree * time), 2);
         }
+
+        public void CreateCall(double currentPrice, double strikePrice, double riskFree, double vol, DateTime ExpiryDate)
+        {
+            double currPrice = currentPrice, spotPrice = strikePrice, riskFR = riskFree, iv = vol;
+            int differance = (ExpiryDate - DateTime.Now).Days;
+            OptPrices = new List<OptionPrice>();
+
+            for (int count = 0; count < 3; count++)
+            {
+                // loop through the days
+                for (int day = 1; day < differance +1; day++)
+                {
+                    OptionPrice optionPrices = new OptionPrice(); // each loop will create a new instance of OptionPrice class
+                    optionPrices.Price = optionPrices.Price = CallOption(currPrice, spotPrice, riskFR, iv, day);
+                    optionPrices.Day = DateTime.Now.AddDays(day);
+
+                    if (count == 0)
+                    {
+                        optionPrices.Varation = "Original";
+                    }
+                    else
+                    {
+                        optionPrices.Varation = "Curr: " + currPrice + " SP: " + spotPrice + " RFR: " + riskFR + " IV: " + iv;
+                    }
+                    OptPrices.Add(optionPrices);
+                }
+                if (count % 2 == 0)
+                {
+                    currPrice += 1;
+                    spotPrice -= 0.5;
+                    iv += 5;
+                    riskFR -= 0.01;
+                }
+                else
+                {
+                    currPrice -= 1;
+                    spotPrice += 0.5;
+                    riskFR += 0.02;
+                    iv -= 5;
+                    if (iv < 0) // IV can never be negative
+                    {
+                        iv = 0;
+                    }
+                }
+            }
+        }
+
     }
 }

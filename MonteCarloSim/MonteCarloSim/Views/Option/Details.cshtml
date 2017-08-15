@@ -72,12 +72,16 @@
         <dd>
             <table class="table">
                 <tr>
+                    <th>Varation</th>
                     <th>Day</th>
                     <th>Price</th>
                 </tr>
                 @foreach (var item in Model.OptPrices)
                 {
                     <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Varation)
+                        </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Day)
 

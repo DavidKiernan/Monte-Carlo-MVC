@@ -16,6 +16,7 @@ namespace MonteCarloSim.Models
         [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}")]
         public DateTime Day { get; set; }
 
+        public string Varation { get; set; }
         public virtual Option Option { get; set; }
     }
 }
