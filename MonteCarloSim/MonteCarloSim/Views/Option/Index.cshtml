@@ -1,44 +1,49 @@
-﻿@model IEnumerable<MonteCarloSim.Models.Option>
+﻿@model PagedList.IPagedList<MonteCarloSim.Models.Option> 
+<!-- Statement  specifies that the view now gets a PagedList object instead of a List object.-->
+<!--statement for PagedList.Mvc gives access to the MVC helper for the paging buttons.-->
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Options";
 }
 
-<h2>Index</h2>
+<h2>Options</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <!--Search bar-->
-@using (Html.BeginForm())
+@using (Html.BeginForm("Index", "Option", FormMethod.Get))
 {
     <p>
-        Find By Contract Name: @Html.TextBox("SearchString")
+        <!--The text box is initialized with the current search string-->
+        Find By Contract Name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" />
     </p>
 }
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("Contract Name", "Index", new { sortOrder = ViewBag.NameSortParm })
+            @Html.ActionLink("Contract Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Expiry Date", "Index", new { sortOrder = ViewBag.DateSortParm })
+            @Html.ActionLink("Expiry Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Current Price", "Index", new { sortOrder = ViewBag.CurrSortParm })
+            @Html.ActionLink("Current Price", "Index", new { sortOrder = ViewBag.CurrSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Strike Price", "Index", new { sortOrder = ViewBag.StrikeParm })
+            @Html.ActionLink("Strike Price", "Index", new { sortOrder = ViewBag.StrikeParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("IV", "Index", new { sortOrder = ViewBag.IVParm })
+            @Html.ActionLink("IV", "Index", new { sortOrder = ViewBag.IVParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Risk Free Rate", "Index", new { sortOrder = ViewBag.RiskFreeParm })
+            @Html.ActionLink("Risk Free Rate", "Index", new { sortOrder = ViewBag.RiskFreeParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Option Type", "Index", new { sortOrder = ViewBag.OptionTypeParm })
+            @Html.ActionLink("Option Type", "Index", new { sortOrder = ViewBag.OptionTypeParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>
@@ -77,3 +82,9 @@
     }
 
 </table>
+<br />
+<!-- The current page and total number of pages are displayed. -->
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

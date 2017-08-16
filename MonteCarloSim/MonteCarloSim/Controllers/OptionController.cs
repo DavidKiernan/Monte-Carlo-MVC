@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MonteCarloSim.DAL;
 using MonteCarloSim.Models;
+using PagedList;
 
 namespace MonteCarloSim.Controllers
 {
@@ -22,8 +23,9 @@ namespace MonteCarloSim.Controllers
          * 
        */
         // GET: Option
-        public ActionResult Index(string sortOrder, string searchString)
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = sortOrder; // provides view with current sort order, keeps paging links in order to keep sort order same while paging
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "contract_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
             ViewBag.CurrSortParm = sortOrder == "curr_price" ? "curr_price_desc" : "curr_price";
@@ -31,7 +33,11 @@ namespace MonteCarloSim.Controllers
             ViewBag.IVParm = sortOrder == "iv_price" ? "iv_price_desc" : "iv_price";
             ViewBag.RiskFreeParm = sortOrder == "risk" ? "risk_desc" : "risk";
             ViewBag.OptionTypeParm = sortOrder == "Call" ? "Put" : "Call";
-            
+
+            // keeps view with the current filter.value must be included in the paging links in order to maintain the filter settings during paging
+            // It must be restored to the text box when the page is redisplayed
+            ViewBag.CurrentFilter = searchString;
+
             var opt = from o in db.Options
                       select o;
             // Search by contract Name
@@ -86,10 +92,17 @@ namespace MonteCarloSim.Controllers
                     opt = opt.OrderBy(o => o.ContractName);
                     break;
             }
-            // Query not converted until executed  the opt.ToList
-            //Code results in single query, not executed until the return view  
-            // gets list of options based on the opt.ToList
-            return View(opt.ToList());
+
+            int pageSize = 3; // items per page 
+
+            // ??  represent the null-coalescing operator. defines a default value for a nullable type
+            //means return the value of page if it has a value, or return 1 if page is null
+            int pageNumber = (page ?? 1);
+
+            // The ToPagedList extension method on the IQueryable object
+            // object converts the student query to a single page of options in a collection type that supports paging
+            // That single page of options is then passed to the view:
+            return View(opt.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Option/Details/5
@@ -181,7 +194,7 @@ namespace MonteCarloSim.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var optionToUpdate = db.Options.Find(id);
-            if (TryUpdateModel(optionToUpdate, "", new string[] { "ContractName"}))
+            if (TryUpdateModel(optionToUpdate, "", new string[] { "ContractName" }))
             {
                 try
                 {
