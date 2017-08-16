@@ -181,10 +181,11 @@ namespace MonteCarloSim.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var optionToUpdate = db.Options.Find(id);
-            if (TryUpdateModel(optionToUpdate, "", new string[] { "ContractName", "ExpiryDate", "CurrentPrice", "StrikePrice", "ImpliedVolatility", "RiskFreeRate", "OptionType" }))
+            if (TryUpdateModel(optionToUpdate, "", new string[] { "ContractName"}))
             {
                 try
                 {
+                    optionToUpdate.ContractName = optionToUpdate.ContractName.ToUpper();
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
