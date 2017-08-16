@@ -22,7 +22,7 @@ namespace MonteCarloSim.Controllers
          * 
        */
         // GET: Option
-        public ActionResult Index(string sortOrder)
+        public ActionResult Index(string sortOrder, string searchString)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "contract_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
@@ -34,7 +34,12 @@ namespace MonteCarloSim.Controllers
             
             var opt = from o in db.Options
                       select o;
-
+            // Search by contract Name
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // search by contract name that start with first letter entered
+                opt = opt.Where(o => o.ContractName.StartsWith(searchString));
+            }
             switch (sortOrder)
             {
                 case "name_desc":
@@ -135,7 +140,7 @@ namespace MonteCarloSim.Controllers
                     {
                         option.CreatePut(option.CurrentPrice, option.StrikePrice, option.RiskFreeRate, option.ImpliedVolatility, option.ExpiryDate);
                     }
-
+                    option.ContractName = option.ContractName.ToUpper(); // convert the contract name to upper case
                     db.Options.Add(option);
                     db.SaveChanges();
                     return RedirectToAction("Index");

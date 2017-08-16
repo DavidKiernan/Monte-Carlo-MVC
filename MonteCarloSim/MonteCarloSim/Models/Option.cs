@@ -81,7 +81,7 @@ namespace MonteCarloSim.Models
             return Math.Max(0.0, strikePrice - assetPrice);
         }
 
-        
+
         // MC_call_option
         private double CallOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
         {
@@ -118,8 +118,8 @@ namespace MonteCarloSim.Models
                 time = day / 366.0; // divide by days in leap year
             }
             else { time = day / 365.0; } // divide by days in non leap year
-            
-            
+
+
             for (int i = 0; i < simulations; i++)
             {
                 double assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
@@ -195,11 +195,11 @@ namespace MonteCarloSim.Models
 
                     if (count == 0)
                     {
-                        optionPrices.Varation = "Original";
+                        optionPrices.Varation = "ORIGINAL";
                     }
                     else
                     {
-                        optionPrices.Varation = "Curr: " + currPrice + " SP: " + spotPrice + " RFR: " + riskFR + " IV: " + iv;
+                        optionPrices.Varation = "VARATION" + count + " CURR: " + currPrice + " SP: " + spotPrice + " RFR: " + riskFR + " IV: " + iv;
                     }
                     OptPrices.Add(optionPrices); // add to the list
                 } // end the inner loop
