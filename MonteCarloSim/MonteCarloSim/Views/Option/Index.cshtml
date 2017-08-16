@@ -12,25 +12,25 @@
 <table class="table">
     <tr>
         <th>
-           @Html.DisplayNameFor(model => model.ContractName)
+            @Html.ActionLink("Contract Name", "Index", new { sortOrder = ViewBag.NameSortParm })
         </th>
         <th>
-           @Html.DisplayNameFor(model => model.ExpiryDate)
+            @Html.ActionLink("Expiry Date", "Index", new { sortOrder = ViewBag.DateSortParm })
         </th>
         <th>
-           @Html.DisplayNameFor(model => model.CurrentPrice)
+            @Html.ActionLink("Current Price", "Index", new { sortOrder = ViewBag.CurrSortParm })
         </th>
         <th>
-           @Html.DisplayNameFor(model => model.StrikePrice)
+            @Html.ActionLink("Strike Price", "Index", new { sortOrder = ViewBag.StrikeParm })
         </th>
         <th>
-           @Html.DisplayNameFor(model => model.ImpliedVolatility)
+            @Html.ActionLink("IV", "Index", new { sortOrder = ViewBag.IVParm })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RiskFreeRate)
+            @Html.ActionLink("Risk Free Rate", "Index", new { sortOrder = ViewBag.RiskFreeParm })
         </th>
         <th>
-           @Html.DisplayNameFor(model => model.OptionType)
+            @Html.ActionLink("Option Type", "Index", new { sortOrder = ViewBag.OptionTypeParm })
         </th>
         <th></th>
     </tr>

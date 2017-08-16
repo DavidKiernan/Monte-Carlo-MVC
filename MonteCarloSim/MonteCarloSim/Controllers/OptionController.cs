@@ -15,13 +15,76 @@ namespace MonteCarloSim.Controllers
     {
         // instantiates a DB context Object
         private OptionContext db = new OptionContext();
-
+        /*
+         * The Index recives the sort order parameter from the query string in the URL
+         * The default is contract name ascending. When user selects column heading the appropriate sortOrder is provided in the query string
+         * The Viewbag variables used so the view can configure the heading column with the query string.
+         * 
+       */
         // GET: Option
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
-            // gets list of options from the Options entity
-            // by reading the Options property of DB context
-            return View(db.Options.ToList());
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "contract_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.CurrSortParm = sortOrder == "curr_price" ? "curr_price_desc" : "curr_price";
+            ViewBag.StrikeParm = sortOrder == "str_price" ? "str_price_desc" : "str_price";
+            ViewBag.IVParm = sortOrder == "iv_price" ? "iv_price_desc" : "iv_price";
+            ViewBag.RiskFreeParm = sortOrder == "risk" ? "risk_desc" : "risk";
+            ViewBag.OptionTypeParm = sortOrder == "Call" ? "Put" : "Call";
+            
+            var opt = from o in db.Options
+                      select o;
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    // Linq statement 
+                    opt = opt.OrderByDescending(o => o.ContractName);
+                    break;
+                case "Date":
+                    opt = opt.OrderBy(o => o.ExpiryDate);
+                    break;
+                case "date_desc":
+                    opt = opt.OrderByDescending(o => o.ExpiryDate);
+                    break;
+                case "curr_price":
+                    opt = opt.OrderBy(o => o.CurrentPrice);
+                    break;
+                case "curr_price_desc":
+                    opt = opt.OrderByDescending(o => o.CurrentPrice);
+                    break;
+                case "str_price":
+                    opt = opt.OrderBy(o => o.StrikePrice);
+                    break;
+                case "str_price_desc":
+                    opt = opt.OrderByDescending(o => o.StrikePrice);
+                    break;
+                case "iv_price":
+                    opt = opt.OrderBy(o => o.ImpliedVolatility);
+                    break;
+                case "iv_price_desc":
+                    opt = opt.OrderByDescending(o => o.ImpliedVolatility);
+                    break;
+                case "risk":
+                    opt = opt.OrderBy(o => o.RiskFreeRate);
+                    break;
+                case "risk_desc":
+                    opt = opt.OrderByDescending(o => o.RiskFreeRate);
+                    break;
+                case "Call":
+                    opt = opt.OrderBy(o => o.OptionType);
+                    break;
+                case "Put":
+                    opt = opt.OrderByDescending(o => o.OptionType);
+                    break;
+                default:
+                    opt = opt.OrderBy(o => o.ContractName);
+                    break;
+            }
+            // Query not converted until executed  the opt.ToList
+            //Code results in single query, not executed until the return view  
+            // gets list of options based on the opt.ToList
+            return View(opt.ToList());
         }
 
         // GET: Option/Details/5

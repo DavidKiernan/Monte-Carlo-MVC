@@ -23,10 +23,10 @@ namespace MonteCarloSim.DAL
 
             var optionPrices = new List<OptionPrice>
             {
-                new OptionPrice{OptionID=1, Day = DateTime.Parse("2017-Aug-2"), Price = 0.1},
-                new OptionPrice{OptionID=1, Day = DateTime.Parse("2017-Aug-3"), Price = 0.5},
-                new OptionPrice{OptionID=2, Day = DateTime.Parse("2017-Aug-8") , Price = 19.19},
-                new OptionPrice{OptionID=2, Day = DateTime.Parse("2017-Aug-9") , Price = 20.18}
+                new OptionPrice{OptionID=1, Varation = "Original" , Day = DateTime.Parse("2017-Aug-2"), Price = 0.1},
+                new OptionPrice{OptionID=1, Varation = "Original" , Day = DateTime.Parse("2017-Aug-3"), Price = 0.5},
+                new OptionPrice{OptionID=2, Varation = "Original" , Day = DateTime.Parse("2017-Aug-8") , Price = 19.19},
+                new OptionPrice{OptionID=2, Varation = "Original", Day = DateTime.Parse("2017-Aug-9") , Price = 20.18}
             };
             optionPrices.ForEach(o => context.OptionPrices.Add(o));
             context.SaveChanges();
