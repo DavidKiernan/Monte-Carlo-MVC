@@ -13,11 +13,11 @@ namespace MonteCarloSim.Models
 
     public class Option
     {
-       
+
         public int ID { get; set; } // Primary Key
 
         [Display(Name = "Contract Name")]
-        [Required(AllowEmptyStrings = false ,ErrorMessage = " Name Required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = " Name Required")]
         public string ContractName { get; set; }
 
         [Display(Name = "Expiry Date")]
@@ -26,11 +26,11 @@ namespace MonteCarloSim.Models
         public DateTime ExpiryDate { get; set; } // date the contract expires on
 
         [Display(Name = "Current Price")]
-        [Required(ErrorMessage = "Enter Current Price"), Min(0.00, ErrorMessage = "Positive Values Only" ), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Price Can't Have More Than 2 Decimal Places")]
+        [Required(ErrorMessage = "Enter Current Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Price Can't Have More Than 2 Decimal Places")]
         public double CurrentPrice { get; set; } // current price of the company's stock
 
         [Display(Name = "Strike Price")]
-        [Required(ErrorMessage = "Enter Strike Price"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Price Can't Have More Than 2 Decimal Places")]
+        [Required(ErrorMessage = "Enter Strike Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Price Can't Have More Than 2 Decimal Places")]
         public double StrikePrice { get; set; } // price sell \ buy option
 
         [Display(Name = "Implied Volatility")]
@@ -38,8 +38,8 @@ namespace MonteCarloSim.Models
         public double ImpliedVolatility { get; set; }
 
         [Display(Name = "Risk Free Rate")]
-        [Required(ErrorMessage = "Enter Risk Free Rate"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Risk Free Rate Can't Have More Than 2 Decimal Places")]
-        public double RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate), in theory can be negative
+        [Required(ErrorMessage = "Enter Risk Free Rate"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Risk Free Rate Can't Have More Than 2 Decimal Places")]
+        public double RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate)
 
         [Display(Name = "Option Type")]
         public OptionType OptionType { get; set; }
@@ -111,7 +111,7 @@ namespace MonteCarloSim.Models
             int simulations = 1000000;
             double payoff = 0.0;
             double time = day / 365.0; // every calution seems to only use 365 days even for a leap year
-            
+
 
             for (int i = 0; i < simulations; i++)
             {
@@ -159,20 +159,30 @@ namespace MonteCarloSim.Models
 
                     if (count == 0)
                     {
-                        optionPrices.Varation = "Original";
+                        optionPrices.Varation = "ORIGINAL";
                     }
                     else
                     {
-                        optionPrices.Varation = "Curr: " + currPrice + " SP: " + spotPrice + " RFR: " + riskFR + " IV: " + iv;
+                        optionPrices.Varation = "VARATION" + count + "    CURR: " + currPrice + "    SP: " + spotPrice + "  RFR: " + riskFR + " %    IV: " + iv + " %";
                     }
                     OptPrices.Add(optionPrices); // add to the list
                 } // end the inner loop
                 if (count % 2 == 0)
                 {
-                    currPrice += 1;
-                    spotPrice -= 0.5;
+                    currPrice += 3.21;
+                    spotPrice -= 1.5;
                     iv += 5;
                     riskFR -= 0.01;
+
+                    if(spotPrice < 0.00)
+                    {
+                        spotPrice = 5;
+                    }
+                    if (riskFR < 0.00)
+                    {
+                        riskFR = 5;
+                    }
+
                 }
                 else
                 {
@@ -180,7 +190,7 @@ namespace MonteCarloSim.Models
                     spotPrice += 0.5;
                     riskFR += 0.02;
                     iv -= 5;
-                    if (iv < 0) // IV can never be negative
+                    if (iv < 0.00) // IV can never be negative
                     {
                         iv = 0;
                     }
@@ -210,27 +220,40 @@ namespace MonteCarloSim.Models
                     }
                     else
                     {
-                        optionPrices.Varation = "VARATION" + count + " CURR: " + currPrice + " SP: " + spotPrice + " RFR: " + riskFR + " IV: " + iv;
+                        optionPrices.Varation = "VARATION" + count + "    CURR: " + currPrice + "    SP: " + spotPrice + "  RFR: " + riskFR + " %    IV: " + iv + " %";
                     }
                     OptPrices.Add(optionPrices); // add to the list
                 } // end the inner loop
                 if (count % 2 == 0)
                 {
-                    currPrice += 1;
-                    spotPrice -= 0.5;
-                    iv += 5;
+                    currPrice += 1.75;
+                    spotPrice -= 0.75;
+                    iv += 12.25;
                     riskFR -= 0.01;
+                    if(spotPrice < 0.00)
+                    {
+                        spotPrice = 5;
+                    }
+                    if (riskFR < 0.00)
+                    {
+                        riskFR = 1;
+                    }
                 }
                 else
                 {
                     currPrice -= 1;
-                    spotPrice += 0.5;
+                    spotPrice += 2.5;
                     riskFR += 0.02;
-                    iv -= 5;
-                    if (iv < 0) // IV can never be negative
+                    iv -= 7.25;
+                    if (iv < 0.00) // IV can never be negative
                     {
                         iv = 0;
                     }
+                    if (currPrice < 0.00) 
+                    {
+                        currPrice = 3;
+                    }
+
                 }
             } // end outer loop varation
         } // end 
