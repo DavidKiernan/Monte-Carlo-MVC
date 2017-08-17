@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<MonteCarloSim.Models.Option> 
+﻿@model PagedList.IPagedList<MonteCarloSim.Models.Option>
 <!-- Statement  specifies that the view now gets a PagedList object instead of a List object.-->
 <!--statement for PagedList.Mvc gives access to the MVC helper for the paging buttons.-->
 @using PagedList.Mvc;
@@ -37,7 +37,7 @@
             @Html.ActionLink("Strike Price", "Index", new { sortOrder = ViewBag.StrikeParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("IV", "Index", new { sortOrder = ViewBag.IVParm, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Implied Volatility", "Index", new { sortOrder = ViewBag.IVParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
             @Html.ActionLink("Risk Free Rate", "Index", new { sortOrder = ViewBag.RiskFreeParm, currentFilter = ViewBag.CurrentFilter })
@@ -52,7 +52,9 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ContractName)
+                <b>
+                    @Html.DisplayFor(modelItem => item.ContractName)
+                </b>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ExpiryDate)
@@ -64,11 +66,11 @@
                 @Html.DisplayFor(modelItem => item.StrikePrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImpliedVolatility)
+                @Html.DisplayFor(modelItem => item.ImpliedVolatility) %
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.RiskFreeRate)
+                @Html.DisplayFor(modelItem => item.RiskFreeRate) %
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OptionType)

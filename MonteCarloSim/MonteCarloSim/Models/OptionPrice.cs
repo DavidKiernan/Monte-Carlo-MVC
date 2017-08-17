@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MonteCarloSim.Models
 {
     public class OptionPrice
     {
-        public int OptionPriceID { get; set; } // pk
-        public int OptionID { get; set; } // FK 
+        public int OptionPriceID { get; set; } // pk uses the classname Patterns
+
+        public int OptionID { get; set; } // FK Entity Framework interprets a property as a foreign key property if it's named <navigation property name><primary key property name>
+
 
         public double Price { get; set; }
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}")]
+        
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}")]
         public DateTime Day { get; set; }
 
+        
         public string Varation { get; set; }
         public virtual Option Option { get; set; }
     }

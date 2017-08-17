@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using DataAnnotationsExtensions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MonteCarloSim.Models
 {
@@ -11,16 +13,35 @@ namespace MonteCarloSim.Models
 
     public class Option
     {
+       
         public int ID { get; set; } // Primary Key
+
+        [Display(Name = "Contract Name")]
+        [Required(AllowEmptyStrings = false ,ErrorMessage = " Name Required")]
         public string ContractName { get; set; }
 
-        [DataType(DataType.Date)]
+        [Display(Name = "Expiry Date")]
+        [Required(ErrorMessage = "Expiry Date Required"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ExpiryDate { get; set; } // date the contract expires on
+
+        [Display(Name = "Current Price")]
+        [Required(ErrorMessage = "Enter Current Price"), Min(0.00, ErrorMessage = "Positive Values Only" ), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Price Can't Have More Than 2 Decimal Places")]
         public double CurrentPrice { get; set; } // current price of the company's stock
+
+        [Display(Name = "Strike Price")]
+        [Required(ErrorMessage = "Enter Strike Price"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Price Can't Have More Than 2 Decimal Places")]
         public double StrikePrice { get; set; } // price sell \ buy option
+
+        [Display(Name = "Implied Volatility")]
+        [Required(ErrorMessage = "Enter Implied Volatility"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "IV Can't Have More Than 2 Decimal Places")]
         public double ImpliedVolatility { get; set; }
-        public double RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate)
+
+        [Display(Name = "Risk Free Rate")]
+        [Required(ErrorMessage = "Enter Risk Free Rate"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Risk Free Rate Can't Have More Than 2 Decimal Places")]
+        public double RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate), in theory can be negative
+
+        [Display(Name = "Option Type")]
         public OptionType OptionType { get; set; }
 
         /* hold the entities related to the Option Price
@@ -89,12 +110,8 @@ namespace MonteCarloSim.Models
             riskFree = riskFree / 100;
             int simulations = 1000000;
             double payoff = 0.0;
-            double time;
-            if (DateTime.IsLeapYear(DateTime.Now.Year)) // check if year is a leap year 
-            {
-                time = day / 366.0; // divide by days in leap year
-            }
-            else { time = day / 365.0; } // divide by days in non leap year
+            double time = day / 365.0; // every calution seems to only use 365 days even for a leap year
+            
 
             for (int i = 0; i < simulations; i++)
             {
@@ -112,13 +129,7 @@ namespace MonteCarloSim.Models
             riskFree = riskFree / 100;
             int simulations = 1000000;
             double payoff = 0.0;
-            double time;
-            if (DateTime.IsLeapYear(DateTime.Now.Year)) // check if year is a leap year 
-            {
-                time = day / 366.0; // divide by days in leap year
-            }
-            else { time = day / 365.0; } // divide by days in non leap year
-
+            double time = day / 365.0;
 
             for (int i = 0; i < simulations; i++)
             {

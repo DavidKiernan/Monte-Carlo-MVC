@@ -47,7 +47,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ImpliedVolatility)
+            @Html.DisplayFor(model => model.ImpliedVolatility) %
         </dd>
 
         <dt>
@@ -55,7 +55,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RiskFreeRate)
+            @Html.DisplayFor(model => model.RiskFreeRate) %
         </dd>
 
         <dt>
@@ -66,21 +66,24 @@
             @Html.DisplayFor(model => model.OptionType)
         </dd>
         <!-- Adding view the Price-->
-        <dt>
-            @Html.DisplayNameFor(model => model.OptPrices)
-        </dt>
+        <dd>
+            <br />
+            <br />
+        </dd>
+
         <dd>
             <table class="table">
                 <tr>
-                    <th>Varation</th>
-                    <th>Day</th>
-                    <th>Price</th>
+                    <th>VARATION</th>
+                    <th>DATE</th>
+                    <th>PRICE</th>
                 </tr>
                 @foreach (var item in Model.OptPrices)
                 {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.Varation)
+
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Day)
