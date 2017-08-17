@@ -26,19 +26,19 @@ namespace MonteCarloSim.Models
         public DateTime ExpiryDate { get; set; } // date the contract expires on
 
         [Display(Name = "Current Price")]
-        [Required(ErrorMessage = "Enter Current Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Price Can't Have More Than 2 Decimal Places")]
+        [Required(ErrorMessage = "Enter Current Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
         public double CurrentPrice { get; set; } // current price of the company's stock
 
         [Display(Name = "Strike Price")]
-        [Required(ErrorMessage = "Enter Strike Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Price Can't Have More Than 2 Decimal Places")]
+        [Required(ErrorMessage = "Enter Strike Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
         public double StrikePrice { get; set; } // price sell \ buy option
 
         [Display(Name = "Implied Volatility")]
-        [Required(ErrorMessage = "Enter Implied Volatility"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "IV Can't Have More Than 2 Decimal Places")]
+        [Required(ErrorMessage = "Enter Implied Volatility"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
         public double ImpliedVolatility { get; set; }
 
         [Display(Name = "Risk Free Rate")]
-        [Required(ErrorMessage = "Enter Risk Free Rate"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Risk Free Rate Can't Have More Than 2 Decimal Places")]
+        [Required(ErrorMessage = "Enter Risk Free Rate"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
         public double RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate)
 
         [Display(Name = "Option Type")]
