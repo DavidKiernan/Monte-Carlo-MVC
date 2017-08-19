@@ -104,7 +104,7 @@ namespace MonteCarloSim.Models
 
 
         // MC_call_option
-        private double CallOption(double currentPrice, double strikePrice, double riskFree, double vol, double day)
+        private double CallOption(double currentPrice, double strikePrice, double riskFree, double vol, int day)
         {
             vol = vol / 100;
             riskFree = riskFree / 100;
@@ -154,7 +154,7 @@ namespace MonteCarloSim.Models
                 for (int day = 1; day < differance + 1; day++)
                 {
                     OptionPrice optionPrices = new OptionPrice(); // each loop will create a new instance of OptionPrice class
-                    optionPrices.Price = optionPrices.Price = CallOption(currPrice, spotPrice, riskFR, iv, day);
+                    optionPrices.Price  = CallOption(currPrice, spotPrice, riskFR, iv, day);
                     optionPrices.Day = DateTime.Now.AddDays(day);
 
                     if (count == 0)
