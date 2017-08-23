@@ -25,21 +25,21 @@ namespace MonteCarloSim.Models
         [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ExpiryDate { get; set; } // date the contract expires on
 
-        [Display(Name = "Current Price")]
+        [Display(Name = "Current Price"), DisplayFormat(DataFormatString = "{0:N2}")]
         [Required(ErrorMessage = "Enter Current Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
-        public double CurrentPrice { get; set; } // current price of the company's stock
+        public decimal CurrentPrice { get; set; } // current price of the company's stock
 
-        [Display(Name = "Strike Price")]
+        [Display(Name = "Strike Price"), DisplayFormat(DataFormatString = "{0:N2}")]
         [Required(ErrorMessage = "Enter Strike Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
-        public double StrikePrice { get; set; } // price sell \ buy option
+        public decimal StrikePrice { get; set; } // price sell \ buy option
 
-        [Display(Name = "Implied Volatility")]
+        [Display(Name = "Implied Volatility"), DisplayFormat(DataFormatString = "{0:N2}")]
         [Required(ErrorMessage = "Enter Implied Volatility"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
-        public double ImpliedVolatility { get; set; }
+        public decimal ImpliedVolatility { get; set; }
 
-        [Display(Name = "Risk Free Rate")]
+        [Display(Name = "Risk Free Rate"), DisplayFormat(DataFormatString = "{0:N2}")]
         [Required(ErrorMessage = "Enter Risk Free Rate"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
-        public double RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate)
+        public decimal RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate)
 
         [Display(Name = "Option Type")]
         public OptionType OptionType { get; set; }
@@ -84,67 +84,69 @@ namespace MonteCarloSim.Models
 
         // private methods as these will be used inside the public method & user has no need to access them
         // Asset Price
-        private double GenerateAssetPrice(double currentPrice, double volatility, double riskFree, double time)
+        private decimal GenerateAssetPrice(decimal currentPrice, decimal volatility, decimal riskFree, double time)
         {
-            return currentPrice * Math.Exp((riskFree - 0.5 * volatility * volatility) * time + volatility * Math.Sqrt(time) * Gaussian_Box_Muller());
+            return currentPrice * (decimal)Math.Exp(((double)riskFree - 0.5 * (double)volatility * (double)volatility) * time + (double)volatility * Math.Sqrt(time) * Gaussian_Box_Muller());
         }
 
 
         // call payoff
-        private double CallPayoff(double assetPrice, double strikePrice)
+        private decimal CallPayoff(decimal assetPrice, decimal strikePrice)
         {
-            return Math.Max(assetPrice - strikePrice, 0.0);
+            const decimal zero = 0.00M;
+            return Math.Max((assetPrice - strikePrice), zero);
         }
 
         // Put payoff
-        private double PutPayoff(double assetPrice, double strikePrice)
+        private decimal PutPayoff(decimal assetPrice, decimal strikePrice)
         {
-            return Math.Max(0.0, strikePrice - assetPrice);
+            const decimal zero = 0.00M;
+            return Math.Max(zero, (strikePrice - assetPrice));
         }
 
 
         // MC_call_option
-        private double CallOption(double currentPrice, double strikePrice, double riskFree, double vol, int day)
+        private decimal CallOption(decimal currentPrice, decimal strikePrice, decimal riskFree, decimal vol, int day)
         {
-            vol = vol / 100;
-            riskFree = riskFree / 100;
+            vol = vol / 100.00M;
+            riskFree = riskFree / 100.00M;
             int simulations = 1000000;
-            double payoff = 0.0;
+            decimal payoff = 0.00M;
             double time = day / 365.0; // every calution seems to only use 365 days even for a leap year
 
 
             for (int i = 0; i < simulations; i++)
             {
-                double assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
+                decimal assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
                 payoff += CallPayoff(assetPrice, strikePrice);
             }
 
-            return Math.Round((payoff / simulations) * Math.Exp(-riskFree * time), 2); // Retrun output to 2 dp
+            return Math.Round((payoff / simulations) * (decimal)Math.Exp((double)-riskFree * time), 2); // Retrun output to 2 dp
         }
 
         // MC_put_option
-        private double PutOption(double currentPrice, double strikePrice, double riskFree, double vol, int day)
+        private decimal PutOption(decimal currentPrice, decimal strikePrice, decimal riskFree, decimal vol, int day)
         {
-            vol = vol / 100;
-            riskFree = riskFree / 100;
+            vol = vol / 100.00M;
+            riskFree = riskFree / 100.00M;
             int simulations = 1000000;
-            double payoff = 0.0;
+            decimal payoff = 0.00M;
             double time = day / 365.0;
 
             for (int i = 0; i < simulations; i++)
             {
-                double assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
+                decimal assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
                 payoff += PutPayoff(assetPrice, strikePrice);
             }
 
-            return Math.Round((payoff / simulations) * Math.Exp(-riskFree * time), 2);
+            return Math.Round((payoff / simulations) * (decimal)Math.Exp((double)-riskFree * time), 2);
         }
 
         // public methods
         // The Create Controller will call these methods
-        public void CreateCall(double currentPrice, double strikePrice, double riskFree, double vol, DateTime ExpiryDate)
+        public void CreateCall(decimal currentPrice, decimal strikePrice, decimal riskFree, decimal vol, DateTime ExpiryDate)
         {
-            double currPrice = currentPrice, spotPrice = strikePrice, riskFR = riskFree, iv = vol; // this allows to vary the inputs & Create with the original
+            decimal currPrice = currentPrice, spotPrice = strikePrice, riskFR = riskFree, iv = vol; // this allows to vary the inputs & Create with the original
             int differance = (ExpiryDate - DateTime.Now).Days;
             OptPrices = new List<OptionPrice>();
 
@@ -154,7 +156,7 @@ namespace MonteCarloSim.Models
                 for (int day = 1; day < differance + 1; day++)
                 {
                     OptionPrice optionPrices = new OptionPrice(); // each loop will create a new instance of OptionPrice class
-                    optionPrices.Price  = CallOption(currPrice, spotPrice, riskFR, iv, day);
+                    optionPrices.Price = CallOption(currPrice, spotPrice, riskFR, iv, day);
                     optionPrices.Day = DateTime.Now.AddDays(day);
 
                     if (count == 0)
@@ -169,28 +171,28 @@ namespace MonteCarloSim.Models
                 } // end the inner loop
                 if (count % 2 == 0)
                 {
-                    currPrice += 3.21;
-                    spotPrice -= 1.5;
+                    currPrice += 3.21M;
+                    spotPrice -= 1.5M;
                     iv += 5;
-                    riskFR -= 0.01;
+                    riskFR -= 0.01M;
 
-                    if(spotPrice < 0.00)
+                    if (spotPrice <= 0.00M)
                     {
-                        spotPrice = 5;
+                        spotPrice = 5.00M;
                     }
-                    if (riskFR < 0.00)
+                    if (riskFR < 0.00M)
                     {
-                        riskFR = 5;
+                        riskFR = 1.00M;
                     }
 
                 }
                 else
                 {
-                    currPrice -= 1;
-                    spotPrice += 0.5;
-                    riskFR += 0.02;
+                    currPrice -= 1.00M;
+                    spotPrice += 0.50M;
+                    riskFR += 0.02M;
                     iv -= 5;
-                    if (iv < 0.00) // IV can never be negative
+                    if (iv < 0.00M) // IV can never be negative but can be zero
                     {
                         iv = 0;
                     }
@@ -199,9 +201,9 @@ namespace MonteCarloSim.Models
         } // end 
 
         // Put Create
-        public void CreatePut(double currentPrice, double strikePrice, double riskFree, double vol, DateTime ExpiryDate)
+        public void CreatePut(decimal currentPrice, decimal strikePrice, decimal riskFree, decimal vol, DateTime ExpiryDate)
         {
-            double currPrice = currentPrice, spotPrice = strikePrice, riskFR = riskFree, iv = vol; // this allows to vary the inputs & Create with the original
+            decimal currPrice = currentPrice, spotPrice = strikePrice, riskFR = riskFree, iv = vol; // this allows to vary the inputs & Create with the original
             int differance = (ExpiryDate - DateTime.Now).Days;
             OptPrices = new List<OptionPrice>();
 
@@ -226,32 +228,32 @@ namespace MonteCarloSim.Models
                 } // end the inner loop
                 if (count % 2 == 0)
                 {
-                    currPrice += 1.75;
-                    spotPrice -= 0.75;
-                    iv += 12.25;
-                    riskFR -= 0.01;
-                    if(spotPrice < 0.00)
+                    currPrice += 1.75M;
+                    spotPrice -= 0.75M;
+                    iv += 12.25M;
+                    riskFR -= 0.01M;
+                    if (spotPrice <= 0.00M)
                     {
                         spotPrice = 5;
                     }
-                    if (riskFR < 0.00)
+                    if (riskFR < 0.00M)
                     {
-                        riskFR = 1;
+                        riskFR = 1.00M;
                     }
                 }
                 else
                 {
-                    currPrice -= 1;
-                    spotPrice += 2.5;
-                    riskFR += 0.02;
-                    iv -= 7.25;
-                    if (iv < 0.00) // IV can never be negative
+                    currPrice -= 1.00M;
+                    spotPrice += 2.50M;
+                    riskFR += 0.02M;
+                    iv -= 7.25M;
+                    if (iv < 0.00M) // IV can never be negative
                     {
                         iv = 0;
                     }
-                    if (currPrice < 0.00) 
+                    if (currPrice <= 0.00M)
                     {
-                        currPrice = 3;
+                        currPrice = 3.00M;
                     }
 
                 }
