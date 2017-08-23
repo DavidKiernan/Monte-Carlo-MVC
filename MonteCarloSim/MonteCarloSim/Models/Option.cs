@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 using DataAnnotationsExtensions;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MonteCarloSim.Models
 {
