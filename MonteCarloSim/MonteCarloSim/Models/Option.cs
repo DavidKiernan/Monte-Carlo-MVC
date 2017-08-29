@@ -51,6 +51,11 @@ namespace MonteCarloSim.Models
         public virtual ICollection<OptionPrice> OptPrices { get; set; }
 
         // Methods
+
+        // Empty constructor for testing purposes
+        public Option()
+        {
+        }
         /*
         * Based on European vanilla option pricing with C++ via Monte Carlo methods
         * Available from https://www.quantstart.com/articles/European-vanilla-option-pricing-with-C-via-Monte-Carlo-methods
@@ -78,23 +83,24 @@ namespace MonteCarloSim.Models
             return (x * Math.Sqrt(-2 * Math.Log(euclid_sq) / euclid_sq));
         }
 
-        // private methods as these will be used inside the public method & user has no need to access them
+        // Should be private methods as these will be used inside the public method & user has no need to access them
+        // Changed to public for the unit tests
         // Asset Price
-        private decimal GenerateAssetPrice(decimal currentPrice, decimal volatility, decimal riskFree, double time)
+        public decimal GenerateAssetPrice(decimal currentPrice, decimal volatility, decimal riskFree, double time)
         {
             return currentPrice * (decimal)Math.Exp(((double)riskFree - 0.5 * (double)volatility * (double)volatility) * time + (double)volatility * Math.Sqrt(time) * Gaussian_Box_Muller());
         }
 
 
         // call payoff
-        private decimal CallPayoff(decimal assetPrice, decimal strikePrice)
+        public decimal CallPayoff(decimal assetPrice, decimal strikePrice)
         {
             const decimal zero = 0.00M;
             return Math.Max((assetPrice - strikePrice), zero);
         }
 
         // Put payoff
-        private decimal PutPayoff(decimal assetPrice, decimal strikePrice)
+        public decimal PutPayoff(decimal assetPrice, decimal strikePrice)
         {
             const decimal zero = 0.00M;
             return Math.Max(zero, (strikePrice - assetPrice));
@@ -102,7 +108,7 @@ namespace MonteCarloSim.Models
 
 
         // MC_call_option
-        private decimal CallOption(decimal currentPrice, decimal strikePrice, decimal riskFree, decimal vol, int day)
+        public decimal CallOption(decimal currentPrice, decimal strikePrice, decimal riskFree, decimal vol, int day)
         {
             vol = vol / 100.00M;
             riskFree = riskFree / 100.00M;
@@ -116,12 +122,12 @@ namespace MonteCarloSim.Models
                 decimal assetPrice = GenerateAssetPrice(currentPrice, vol, riskFree, time);
                 payoff += CallPayoff(assetPrice, strikePrice);
             }
-
+                                                        // Discount factor
             return Math.Round((payoff / simulations) * (decimal)Math.Exp((double)-riskFree * time), 2); // Retrun output to 2 dp
         }
 
         // MC_put_option
-        private decimal PutOption(decimal currentPrice, decimal strikePrice, decimal riskFree, decimal vol, int day)
+        public decimal PutOption(decimal currentPrice, decimal strikePrice, decimal riskFree, decimal vol, int day)
         {
             vol = vol / 100.00M;
             riskFree = riskFree / 100.00M;
