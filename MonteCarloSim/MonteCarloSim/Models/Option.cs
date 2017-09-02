@@ -13,28 +13,28 @@ namespace MonteCarloSim.Models
         public int ID { get; set; } // Primary Key
 
         [Display(Name = "Contract Name")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = " Name Required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = " Name Required"), RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed")]
         public string ContractName { get; set; }
 
         [Display(Name = "Expiry Date")]
-        [Required(ErrorMessage = "Expiry Date Required"), DataType(DataType.Date)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Expiry Date Required"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ExpiryDate { get; set; } // date the contract expires on
 
         [Display(Name = "Current Price"), DisplayFormat(DataFormatString = "{0:N2}")]
-        [Required(ErrorMessage = "Enter Current Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Enter Current Price") ,Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00 No white space allowed")]
         public decimal CurrentPrice { get; set; } // current price of the company's stock
 
         [Display(Name = "Strike Price"), DisplayFormat(DataFormatString = "{0:N2}")]
-        [Required(ErrorMessage = "Enter Strike Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Enter Strike Price"), Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00 No white space allowed")]
         public decimal StrikePrice { get; set; } // price sell \ buy option
 
         [Display(Name = "Implied Volatility"), DisplayFormat(DataFormatString = "{0:N2}")]
-        [Required(ErrorMessage = "Enter Implied Volatility"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Enter Implied Volatility"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00 No white space allowed")]
         public decimal ImpliedVolatility { get; set; }
 
         [Display(Name = "Risk Free Rate"), DisplayFormat(DataFormatString = "{0:N2}")]
-        [Required(ErrorMessage = "Enter Risk Free Rate"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Enter Risk Free Rate"), Min(0.00, ErrorMessage = "Positive Values Only"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00 No White Spaces Allowed ")]
         public decimal RiskFreeRate { get; set; } // eg goverment bond ( us daily yield curve rate)
 
         [Display(Name = "Option Type")]
