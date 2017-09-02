@@ -10,10 +10,10 @@ namespace MonteCarloSim.Models
         public int OptionID { get; set; } // FK Entity Framework interprets a property as a foreign key property if it's named <navigation property name><primary key property name>
 
 
-        [DisplayFormat(DataFormatString = "{0:N2}")]
+        [DisplayFormat(DataFormatString = "{0:N2}")] // display as 2 DP so 9.5 will display as 9.50
         public decimal Price { get; set; }
 
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}")] // display in format of 12-JUL-2017
         public DateTime Day { get; set; }
 
         

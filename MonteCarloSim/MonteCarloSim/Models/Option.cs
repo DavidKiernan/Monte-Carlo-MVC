@@ -12,7 +12,7 @@ namespace MonteCarloSim.Models
 
         public int ID { get; set; } // Primary Key
 
-        [Display(Name = "Contract Name")]
+        [Display(Name = "Contract Name")]           // No empty boxes & Allow all chars expect white spaces
         [Required(AllowEmptyStrings = false, ErrorMessage = " Name Required"), RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed")]
         public string ContractName { get; set; }
 
@@ -21,7 +21,7 @@ namespace MonteCarloSim.Models
         [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ExpiryDate { get; set; } // date the contract expires on
 
-        [Display(Name = "Current Price"), DisplayFormat(DataFormatString = "{0:N2}")]
+        [Display(Name = "Current Price"), DisplayFormat(DataFormatString = "{0:N2}")] //display to 2 DP
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter Current Price") ,Min(1, ErrorMessage = "Minimum Value is 1"), RegularExpression(@"\d+(\.\d{0,2})?", ErrorMessage = "Ensure Format is 00.00 No white space allowed")]
         public decimal CurrentPrice { get; set; } // current price of the company's stock
 
@@ -96,7 +96,7 @@ namespace MonteCarloSim.Models
         public decimal CallPayoff(decimal assetPrice, decimal strikePrice)
         {
             const decimal zero = 0.00M;
-            return Math.Max((assetPrice - strikePrice), zero);
+            return Math.Max((assetPrice - strikePrice), zero); //return the max value of either the assest - strike or 0.00
         }
 
         // Put payoff
@@ -161,7 +161,7 @@ namespace MonteCarloSim.Models
                     optionPrices.Price = CallOption(currPrice, spotPrice, riskFR, iv, day);
                     optionPrices.Day = DateTime.Now.AddDays(day);
 
-                    if (count == 0)
+                    if (count == 0) // 1st run through
                     {
                         optionPrices.Varation = "ORIGINAL";
                     }
@@ -171,16 +171,17 @@ namespace MonteCarloSim.Models
                     }
                     OptPrices.Add(optionPrices); // add to the list
                 } // end the inner loop
-                if (count % 2 == 0)
+
+                if (count % 2 == 0)  // even
                 {
                     currPrice += 3.21M;
                     spotPrice -= 1.5M;
                     iv += 5;
                     riskFR -= 0.01M;
 
-                    if (spotPrice <= 0.00M)
+                    if (spotPrice <= 0.00M) // check that the strike price above 0.00 
                     {
-                        spotPrice = 5.00M;
+                        spotPrice = 5.00M;  // set to 5 if it is not
                     }
                     if (riskFR < 0.00M)
                     {
@@ -197,6 +198,11 @@ namespace MonteCarloSim.Models
                     if (iv < 0.00M) // IV can never be negative but can be zero
                     {
                         iv = 0;
+                    }
+
+                    if (currPrice <= 0.00M) // set current price to 3 if 0 or less
+                    {
+                        currPrice = 3.00M;
                     }
                 }
             } // end outer loop varation

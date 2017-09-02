@@ -1,7 +1,52 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+<h2><b>Monte Carlo Simulation Explined</b></h2>
+<p>
+    Think beginner gambler that plays a dice game for the first time
+    They won't know what the odds to roll a six in any combination.
+    <br />What are the odds of rolling two threes? Throwing the dice say
+    a few million times, will give one the representative distribution
+    of results which will tell us the likey a roll of six will be
+    two threes. Ideally, should run these tests efficiently & quickly.
+</p>
+
+<h2><b>Pricing options using Monte Carlo simulations</b></h2>
+<p>
+    An option is a contract that gives the buyer the right to buy or sell an asset at a particular price, at a point in the future.
+    These contracts, known as derivatives, are traded for a number of reasons, but a common usage is
+    to hedge away exposure to an asset's price moving in an undesirable way.
+</p>
+
+<h2><b>Break Down of Monte Carlo in Option Pricing European Style</b></h2>
+<p>
+    This type of simulation cab only be used (or exercised) once the option has reached a predetermined date in the future, known as its expiry date.
+    <br />A <b>CALL</b> option gives the holder of the option the right to <b>buy</b> at a known price. A call makes money if the price of the asset at maturity.
+    <br />Similarly, a <b>PUT</b> option is the right to <b>sell</b> an asset. A put makes money when the asset is below the strike price at maturity, otherwise it's worth nothing.
+</p>
+
+<h3><b>Risk-neutral valuation</b></h3>
+<p>
+    To price an option using a Monte Carlo simulation we use a risk-neutral valuation, where the fair value for a derivative is the expected value of its future payoff.
+    <br />Under the risk-neutral valuation we assume that underlying asset is going to earn, on average, the risk-free interest rate. So to calculate an option payoff for any time we discount the payoff by that interest rate. 
+</p>
+<h3><b>Simulating Asset Paths</b></h3>
+<p>
+    The first step in using Monte-Carlo methods is to generate (a large number of) potential future asset prices.
+    This is done by selecting an appropriate (stochastic) model for the time evolution of the underlying asset(s) and then simulating the model through time.
+    Typically many thousands, if not tens of thousands, of simulated paths must be generated to enable an accurate option price to be calculated.
+    The more paths that are generated the longer the simulation will take to be performed and hence the longer the time taken to price the option.
+</p>
+
+<h3><b>Pricing the Option</b></h3>
+<p>
+    To price an option, generate many prices that the asset might be at maturity, 
+    calculate option payoffs for each of those generated prices, average them, and then discount the final value.
+    <br />The more simulations performed, the more accurate the price.
+</p>
+<br />
+<h4><b>Further Information Avaiable</b></h4>
+<a href="http://www.investopedia.com/articles/investing/112514/monte-carlo-simulation-basics.asp" target="_blank" style="color:blue"><b>Investopedia Monte Carlo Simulation: The Basics</b></a><br />
+<a href="https://www.quantstart.com/articles/european-vanilla-option-pricing-with-c-via-monte-carlo-methods" target="_blank" style="color:blue"><b>QuantStart European vanilla option pricing with C++ via Monte Carlo methods</b></a><br />
+

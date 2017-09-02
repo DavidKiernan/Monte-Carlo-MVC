@@ -135,7 +135,7 @@ namespace MonteCarloSim.Controllers
             {
                 if (option.ExpiryDate <= DateTime.Now) // Date selected has to be greater than Todays Date
                 {
-                    ModelState.AddModelError("ExpiryDate", "Date Must Be Greater Than Today's Date"); // display this meeage  
+                    ModelState.AddModelError("ExpiryDate", "Date Must Be Greater Than Today's Date"); // display this message  
                 }
 
                 if (ModelState.IsValid) // server side validation
@@ -150,10 +150,11 @@ namespace MonteCarloSim.Controllers
                     {
                         option.CreatePut(option.CurrentPrice, option.StrikePrice, option.RiskFreeRate, option.ImpliedVolatility, option.ExpiryDate);
                     }
+
                     option.ContractName = option.ContractName.ToUpper(); // convert the contract name to upper case
-                    db.Options.Add(option);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    db.Options.Add(option); // add to the DB
+                    db.SaveChanges(); // Save 
+                    return RedirectToAction("Index"); // return to the option Index page
                 }
             }
             catch (DataException /* dex */)
