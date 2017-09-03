@@ -7,7 +7,7 @@ namespace MonteCarloSim.Models.Tests
     {
         // Test that works as it should where value not zero
         [TestMethod]
-        public void CallPayoff_Generates_Greater_Zero()
+        public void CallPayoffGeneratesGreaterZero()
         {
             // Arrange
             decimal asset = 100;
@@ -24,7 +24,7 @@ namespace MonteCarloSim.Models.Tests
 
         // Test that if number is negative then output is zero
         [TestMethod]
-        public void CallPayoff_Generates_Zero()
+        public void CallPayoffGeneratesZero()
         {
             var option = new Option();
             // Arrange
@@ -41,7 +41,7 @@ namespace MonteCarloSim.Models.Tests
 
         // Test that works as it should where value not zero
         [TestMethod]
-        public void PutPayoff_Greater_Zero()
+        public void PutPayoffGreaterZero()
         {
             // Arrange
             decimal asset = 100;
@@ -58,7 +58,7 @@ namespace MonteCarloSim.Models.Tests
 
         [TestMethod]
         // negative or value equal 0 output is zero
-        public void PutPayoff_Should__Equal_Zero()
+        public void PutPayoffShouldEqualZero()
         {
             // Arrange
             decimal asset = 190;
@@ -75,7 +75,7 @@ namespace MonteCarloSim.Models.Tests
 
         // The Volatility will be changed for each of the following tests
         [TestMethod()]
-        public void CallOption_Curr_Greater_Strike()
+        public void CallOptionCurrGreaterStrike()
         {
             // Arrange
             var option = new Option();
@@ -98,7 +98,7 @@ namespace MonteCarloSim.Models.Tests
         // Outputs 0.37, 0.54, 0.43, 0.55, 0.49, 0.35, 0.44, 0.51, 0.39, 0.58 
         // so testing that the value doesn't exceed 0.7 
         [TestMethod()]
-        public void CallOption_Strike_Greater_Curr()
+        public void CallOptionStrikeGreaterCurr()
         {
             // Arrange
             var option = new Option();
@@ -118,7 +118,7 @@ namespace MonteCarloSim.Models.Tests
         }
 
         [TestMethod()]
-        public void CallOption_Days_Equal_Three()
+        public void CallOptionDaysEqualThree()
         {
             // Arrange
             var option = new Option();
@@ -138,7 +138,7 @@ namespace MonteCarloSim.Models.Tests
         }
 
         [TestMethod()]
-        public void PutOption_Strike_Greater_Curr()
+        public void PutOptionStrikeGreaterCurr()
         {
 
             // Arrange
@@ -161,7 +161,7 @@ namespace MonteCarloSim.Models.Tests
         // Values vary from test to test but don't go below 0.45
         // Range 0.70 to 0.45, 10 tests 
         [TestMethod()]
-        public void PutOption_Curr_Greater_Strike()
+        public void PutOptionCurrGreaterStrike()
         {
 
             // Arrange
@@ -183,7 +183,7 @@ namespace MonteCarloSim.Models.Tests
 
         // value is not 0.00
         [TestMethod()]
-        public void PutOption_Days_Equal_Three()
+        public void PutOptionDaysEqualThree()
         {
 
             // Arrange
@@ -194,13 +194,13 @@ namespace MonteCarloSim.Models.Tests
             decimal volatility = 12.00M;
             int day = 3;
 
-            decimal expected = 0.00M;
+            decimal notExpected = 0.00M;
 
             //act
             decimal actual = option.PutOption(currentPrice, strikePrice, riskFreeRate, volatility, day);
 
             // assert
-            Assert.AreNotEqual(expected, actual);
+            Assert.AreNotEqual(notExpected, actual);
         }
     }
 }
