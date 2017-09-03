@@ -158,11 +158,21 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OptionController.cs" />
+    <Compile Include="DAL\OptionConfiguration.cs" />
     <Compile Include="DAL\OptionContext.cs" />
     <Compile Include="DAL\OptionInitializer.cs" />
+    <Compile Include="DAL\OptionInterceptorLogging.cs" />
+    <Compile Include="DAL\OptionInterceptorTransientErrors.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Migrations\201709030846492_InitialCreate.cs" />
+    <Compile Include="Migrations\201709030846492_InitialCreate.Designer.cs">
+      <DependentUpon>201709030846492_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Option.cs" />
     <Compile Include="Models\OptionPrice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -227,6 +237,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201709030846492_InitialCreate.resx">
+      <DependentUpon>201709030846492_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

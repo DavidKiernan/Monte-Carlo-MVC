@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using MonteCarloSim.DAL;
 using MonteCarloSim.Models;
 using PagedList;
-
+using System.Data.Entity.Infrastructure;
 namespace MonteCarloSim.Controllers
 {
     public class OptionController : Controller
@@ -157,7 +157,7 @@ namespace MonteCarloSim.Controllers
                     return RedirectToAction("Index"); // return to the option Index page
                 }
             }
-            catch (DataException /* dex */)
+            catch (RetryLimitExceededException /* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
@@ -200,7 +200,7 @@ namespace MonteCarloSim.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                catch (DataException /* dex */)
+                catch (RetryLimitExceededException /* dex */)
                 {
                     //Log the error (uncomment dex variable name and add a line here to write a log.
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
@@ -240,7 +240,7 @@ namespace MonteCarloSim.Controllers
                 db.Options.Remove(option);
                 db.SaveChanges();
             }
-            catch (DataException/* dex */)
+            catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 return RedirectToAction("Delete", new { id = id, saveChangesError = true });
