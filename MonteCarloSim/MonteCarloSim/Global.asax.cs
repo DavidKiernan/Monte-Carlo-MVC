@@ -19,8 +19,12 @@ namespace MonteCarloSim
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             // Added for Logging
+            // Can be added in the OptionConfiguration, but only be added once as it will get two logs for every SQL query
             DbInterception.Add(new OptionInterceptorTransientErrors());
             DbInterception.Add(new OptionInterceptorLogging());
+
+            // These lines of code are what causes the interceptor code to be run when EF sends queries to the database. 
+            // Created separate interceptor classes for transient error simulation and logging, so can independently enable and disable them.
         }
     }
 }

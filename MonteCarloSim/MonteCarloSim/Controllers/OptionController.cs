@@ -200,7 +200,7 @@ namespace MonteCarloSim.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                catch (RetryLimitExceededException /* dex */)
+                catch (RetryLimitExceededException /* dex */) //retry policy with exceptionreturned wrapped in the execption
                 {
                     //Log the error (uncomment dex variable name and add a line here to write a log.
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");

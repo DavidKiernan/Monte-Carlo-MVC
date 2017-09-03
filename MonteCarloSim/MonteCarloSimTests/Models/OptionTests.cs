@@ -1,5 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+﻿/*
+ * This will test the most important parts of the code which would be 
+ * generating the payoff for the call and put options.
+ * Calculating the price as a single price but with different parameters
+ * As once these tests are working correctly they are then called inside a method
+ * that will get the duration loop through it for as long as the duration and pass in its current loop as the day
+ * it is also responisble for the varations and adding to the list
+ * The generating asset price is not tested as it produces a random number.
+ */
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MonteCarloSim.Models.Tests
 {
     [TestClass()]
@@ -14,8 +22,8 @@ namespace MonteCarloSim.Models.Tests
             decimal strike = 90;
             decimal expected = 10;
             var option = new Option();
-            // act
 
+            // act code: (assetPrice - strikePrice), 0.00
             decimal actual = option.CallPayoff(asset, strike);
 
             // Assert
@@ -32,7 +40,7 @@ namespace MonteCarloSim.Models.Tests
             decimal strike = 190;
             decimal expected = 0;
 
-            // act
+            // act code: (assetPrice - strikePrice), 0.00
             decimal actual = option.CallPayoff(asset, strike);
 
             // Assert
@@ -48,7 +56,8 @@ namespace MonteCarloSim.Models.Tests
             decimal strike = 190;
             decimal expected = 90;
             var option = new Option();
-            // act
+
+            // act code:(strikePrice - assetPrice),0.0
 
             decimal actual = option.PutPayoff(asset, strike);
 
@@ -66,7 +75,7 @@ namespace MonteCarloSim.Models.Tests
             decimal expected = 0;
             var option = new Option();
 
-            // act
+            // act code:(strikePrice - assetPrice),0.0
 
             decimal actual = option.PutPayoff(asset, strike);
             // assert
@@ -77,6 +86,9 @@ namespace MonteCarloSim.Models.Tests
         [TestMethod()]
         public void CallOptionCurrGreaterStrike()
         {
+            // Check that the price won't change when ran for period of time this code will take 10 for testing purposes
+            // where as the actually code will take in 1,2,3,4,...,10 to calculate each day as the day will be passed
+            // as a parameter that will be in the outer method
             // Arrange
             var option = new Option();
             decimal currentPrice = 130.72M;
@@ -117,6 +129,8 @@ namespace MonteCarloSim.Models.Tests
             Assert.AreNotEqual(expected, actual);
         }
 
+        // ensure that when using the call method on contract with a 3 day duration
+        // it returns zero as it wont have enough days to increase 
         [TestMethod()]
         public void CallOptionDaysEqualThree()
         {
@@ -137,6 +151,7 @@ namespace MonteCarloSim.Models.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        // that the value will be this value for duration of 10 days
         [TestMethod()]
         public void PutOptionStrikeGreaterCurr()
         {
@@ -146,7 +161,7 @@ namespace MonteCarloSim.Models.Tests
             decimal currentPrice = 140.5M;
             decimal strikePrice = 144.00M;
             decimal riskFreeRate = 0.93M;
-            decimal volatility = .00M;
+            decimal volatility = 0.00M;
             int day = 10;
 
             decimal expected = 3.46M;
@@ -181,7 +196,7 @@ namespace MonteCarloSim.Models.Tests
             Assert.AreNotEqual(expected, actual);
         }
 
-        // value is not 0.00
+        // value is not 0.00 even if only runs for 3 days
         [TestMethod()]
         public void PutOptionDaysEqualThree()
         {

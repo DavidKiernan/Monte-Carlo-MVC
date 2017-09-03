@@ -52,3 +52,12 @@ namespace MonteCarloSim.DAL
         }
     } // end 
 }
+/*
+ * Not sure if working but not stopping App from running on a local machine, thus left in.
+ * Will generate dummy transient errors when you enter "Throw" in the Search box.
+ * This code only overrides the ReaderExecuting method, 
+ * which is called for queries that can return multiple rows of data
+ * to check connection resiliency for other types of queries,
+ * could also override the NonQueryExecuting and ScalarExecuting methods,
+ * as the logging interceptor does.
+ */

@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Linq;
 using MonteCarloSim.Logging;
 
+// Successful queries this code writes with latency information
+// Exceptions it creates an Error Log
 namespace MonteCarloSim.DAL
 {
     public class OptionInterceptorLogging : DbCommandInterceptor
