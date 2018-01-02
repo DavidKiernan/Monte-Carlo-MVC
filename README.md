@@ -1,2 +1,3 @@
 # Monte-Carlo-MVC
-4th Year Repeat Project
+# Calculates the stock option price using user input.
+# 
